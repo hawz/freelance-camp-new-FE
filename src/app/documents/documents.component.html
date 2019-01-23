@@ -1,0 +1,25 @@
+<h1 class="headline">Documents</h1>
+
+<div class="card-columns">
+  <div class="card" *ngFor="let doc of documents">
+    <img
+      class="card-img-top"
+      src="{{ doc.image_url }}"
+      width="100%"
+      alt="Card image cap"
+    />
+    <div class="card-body">
+      <h5 class="card-title">{{ doc.title }}</h5>
+      <p class="card-text"><small class="text-muted">Last updated: {{ doc.updated_at | date }}</small></p>
+      <p class="card-text">{{ doc.description }}</p>
+      <div>
+        <a
+          class="btn btn-lg btn-primary btn-block"
+          href="{{ doc.file_url }}"
+          target="_blank"
+          >Download file</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

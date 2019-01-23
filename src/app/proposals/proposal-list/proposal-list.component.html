@@ -1,0 +1,42 @@
+<div class="list-group">
+  <a
+    class="list-group-item list-group-item-action flex-column align-items-start active"
+  >
+    <h1 class="headline">Proposal List</h1>
+  </a>
+  <span
+    *ngFor="let proposal of proposals"
+    class="list-group-item list-group-item-action flex-column align-items-start"
+  >
+    <!--  -->
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ proposal.customer }}</h5>
+      <small>{{ proposal.weeks_to_complete }} weeks to complete</small>
+    </div>
+    <p class="mb-1">
+      {{
+        proposal.hourly_rate * proposal.estimated_hours
+          | currency: "€":true:".0"
+      }}
+    </p>
+    <div class="d-flex w-100">
+      <div class="mr-auto p-2 align-self-end">
+        <small>Tech: {{ proposal.tools }}</small>
+      </div>
+      <div class="p-2">
+        <a
+          class="btn btn-outline-primary btn-lg"
+          [routerLink]="['/proposals', proposal.id]"
+          >Show</a
+        >
+      </div>
+      <div class="p-2">
+        <a
+          class="btn btn btn-outline-secondary btn-lg"
+          [routerLink]="['/proposals', proposal.id, 'edit']"
+          >Edit</a
+        >
+      </div>
+    </div>
+  </span>
+</div>
