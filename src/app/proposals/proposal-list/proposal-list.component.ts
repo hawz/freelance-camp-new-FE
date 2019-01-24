@@ -13,33 +13,35 @@ import { ProposalsService } from '../proposals.service';
 export class ProposalListComponent implements OnInit, OnDestroy {
   proposals: Proposal[];
   subscription: Subscription;
-  timedSubscription: Observable<number>;
+
+  timedSubscription: Subscription;
+  timerProposals: Observable<number>;
 
   constructor(private proposalService: ProposalsService) {}
 
   ngOnInit() {
-    this.timedSubscription = timer(0, 60000);
+    this.timerProposals = timer(0, 6000);
 
     this.subscription = this.proposalService.proposalsChanged
       .subscribe(
         (proposals: Proposal[]) => {
-          console.log('proposals are changed');
           this.proposals = proposals;
         }
       );
 
     // this.fetchProposals();
-    this.timedSubscription.subscribe(() => this.fetchProposals());
+    this.timedSubscription = this.timerProposals.subscribe(() => this.fetchProposals());
   }
 
   fetchProposals() {
     this.proposalService.fetchProposals().subscribe(
-      (proposals) => console.log('fetched proposals', proposals),
+      () => {},
       (error) => console.error(error)
     );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.timedSubscription.unsubscribe();
   }
 }

@@ -152,6 +152,16 @@
               >
             </p>
           </div>
+          <div [hidden]="!showConfirm || !editMode" class="alert alert-success" role="alert">Your proposal has been edited! <a [routerLink]="['/proposals']">View all proposals!</a></div>
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            [disabled]="!proposalForm.valid"
+            [hidden]="submitted"
+          >
+            <span *ngIf="editMode">Edit Proposal</span>
+            <span *ngIf="!editMode">Generate Proposal</span>
+          </button>
         </form>
       </div>
     </div>
@@ -185,7 +195,10 @@
         development time to complete. The project should take
         {{ proposal.weeks_to_complete }} weeks to complete and with my hourly
         rate of {{ proposal.hourly_rate }}/hour, the estimated total will be
-        {{ proposal.hourly_rate * proposal.estimated_hours | currency : '€' : true : '.0' }}.
+        {{
+          proposal.hourly_rate * proposal.estimated_hours
+            | currency: "€":true:".0"
+        }}.
       </p>
 
       <p>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -16,12 +16,21 @@ export class ProposalsService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getProposal(id: number) {
+    return this.proposals.find((proposal) => proposal.id === id);
+  }
+
   getProposals() {
     return this.proposals.slice();
   }
 
-  getProposal(id: number) {
-    return this.proposals.find((proposal) => proposal.id === id);
+  fetchProposal(id: number) {
+    return this.httpClient.get(this.proposalAPIBaseUrl + 'proposals/' + id + '.json', {
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      catchError((error) => throwError(error))
+    );
   }
 
   fetchProposals(): Observable<Proposal[]> {
@@ -42,19 +51,33 @@ export class ProposalsService {
     this.proposalsChanged.next(this.proposals.slice());
   }
 
-  addProposal(proposal: Proposal) {
-    this.proposals.push(proposal);
+  addProposal(newProposal: Proposal) {
+    return this.httpClient.post(this.proposalAPIBaseUrl + 'proposals', newProposal, {
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      map((res) => console.log(res)),
+      catchError((error) => throwError(error))
+    );
   }
 
-  updateProposal(id: number, newProposal: Proposal) {
-    const proposal = this.getProposal(id);
-    const index = this.proposals.indexOf(proposal);
-    this.proposals[index] = newProposal;
+  updateProposal(id: number, updatedProposal: Proposal) {
+    return this.httpClient.put(this.proposalAPIBaseUrl + 'proposals/' + id, updatedProposal, {
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      map((res) => console.log(res)),
+      catchError((error) => throwError(error))
+    );
   }
 
   deleteProposal(id: number) {
-    const proposal = this.getProposal(id);
-    const index = this.proposals.indexOf(proposal);
-    this.proposals.splice(index, 1);
+    console.log('proposalService.deleteProposal');
+    return this.httpClient.delete(this.proposalAPIBaseUrl + 'proposals/' + id, {
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      catchError((error) => throwError(error))
+    );
   }
 }

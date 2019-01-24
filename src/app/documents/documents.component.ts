@@ -13,12 +13,14 @@ import { DocumentService } from './document.service';
 export class DocumentsComponent implements OnInit, OnDestroy {
   documents: Document[];
   subscription: Subscription;
-  timedSubscription: Observable<number>;
+
+  timedSubscription: Subscription;
+  timerDocuments: Observable<number>;
 
   constructor(private documentsService: DocumentService) { }
 
   ngOnInit() {
-    this.timedSubscription = timer(0, 60000);
+    this.timerDocuments = timer(0, 6000);
 
     this.subscription = this.documentsService.documentsChanged
       .subscribe(
@@ -29,7 +31,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       );
 
     // this.fetchDocuments();
-    this.timedSubscription.subscribe(() => this.fetchDocuments());
+    this.timedSubscription = this.timerDocuments.subscribe(() => this.fetchDocuments());
   }
 
   fetchDocuments() {
@@ -41,5 +43,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.timedSubscription.unsubscribe();
   }
 }
